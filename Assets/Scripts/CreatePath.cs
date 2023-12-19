@@ -20,6 +20,7 @@ public class CreatePath : MonoBehaviour
              
                 GameObject _obj = Instantiate(_objPrefabs, _transform);
                 _obj.transform.position = new Vector3(j, 0, i);
+               
 
             }
         }

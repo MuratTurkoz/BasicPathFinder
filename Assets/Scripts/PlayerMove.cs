@@ -1,35 +1,36 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.UIElements;
 using UnityEngine;
 
 public class PlayerMove : MonoBehaviour
 {
-    [SerializeField] private List<Transform> _paths = new List<Transform>();
-    [SerializeField][Range(1, 5)] private float _speed = 1f;
-    private Vector3 startPos;
-    private Vector3 endPos;
-    private float _timePercent = 0f;
-
+    [SerializeField] private List<GameObject> _wayPoints = new List<GameObject>();
+    [SerializeField][Range(0, 3)] private float _speed = 1;
+    private Vector3 _currentPos;
+    private Vector3 _nextPos;
+    private float _timeScale = 0;
 
     private void Start()
     {
-        StartCoroutine(nameof(FollowPath));
+        StartCoroutine(nameof(PathFinder));
     }
 
-    private IEnumerator FollowPath()
+    private IEnumerator PathFinder()
     {
-        foreach (Transform path in _paths)
+        foreach (GameObject item in _wayPoints)
         {
-            startPos = transform.position;
-            endPos = path.position;
-            _timePercent = 0f;
-            while (_timePercent < 1)
-            {
-                _timePercent += Time.deltaTime*_speed;
-                transform.position = Vector3.MoveTowards(startPos, endPos, _timePercent);
+            _timeScale = 0;
+            _currentPos = transform.position;
+            _nextPos = item.transform.position;
 
+            while (_timeScale <= 1)
+            {
+                _timeScale += Time.deltaTime * _speed;
+                transform.position = Vector3.MoveTowards(_currentPos, _nextPos, _timeScale);
                 yield return new WaitForEndOfFrame();
             }
+
         }
     }
 }
